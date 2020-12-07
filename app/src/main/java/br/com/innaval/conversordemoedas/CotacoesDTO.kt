@@ -1,5 +1,10 @@
 package br.com.innaval.conversordemoedas
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class CotacoesDTO (
-        val USD: Double
-        )
+        @SerializedName("USD") val USD: Double
+        ): Parcelable

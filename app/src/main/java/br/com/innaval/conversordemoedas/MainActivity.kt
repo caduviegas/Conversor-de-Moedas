@@ -5,6 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import org.json.JSONObject
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -27,7 +33,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun baixarDTODaInternet(){
+        val requisicoes = Volley.newRequestQueue(this)
+        val url = "https://api.exchangeratesapi.io/latest?base=BRL"
+        val metodo = Request.Method.GET
+        val body = null
+        val respostaSucesso =  Response.Listener<JSONObject> { json ->
+            if(json!=null){
+                val gson = Gson()
+                val respostaDTO = gson.fromJson<RespostaDTO>(json.toString(), RespostaDTO::class.java)
+                exibirResultadoCalculado(respostaDTO)
+            }else{
+                exibirErroConexao()
+            }
 
+        }
+        val respostaErro =  Response.ErrorListener {
+            exibirErroConexao()
+
+        }
+
+        val requisicaoJson = JsonObjectRequest(
+                metodo,
+                url,
+                body,
+                respostaSucesso,
+                respostaErro
+        )
+        requisicoes.add(requisicaoJson)
 
     }
 
